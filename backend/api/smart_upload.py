@@ -92,7 +92,8 @@ async def analyze_csv(file: UploadFile = File(...), file_type: str = Form("leads
     target_schema = LEADS_SCHEMA if file_type == "leads" else EMAILS_SCHEMA
 
     # Call Ollama to map columns
-    llm = OllamaWrapper('minimax-m2.5:cloud')
+    llm = OllamaWrapper()
+
     
     prompt = f"""
 You are a data mapping assistant. I have a user-uploaded CSV file and I need to map its columns to my system's internal schema.

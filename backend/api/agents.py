@@ -22,59 +22,70 @@ from prompts.email_strategy_prompts import email_strategy_prompts
 from langgraph_nodes.email_strategy_node import create_email_strategy_graph
 from services.twilio_service import TwilioService
 
+import time
+import threading
+from langchain_nvidia_ai_endpoints import ChatNVIDIA
+
 class OllamaResponse:
     def __init__(self, text):
         self.text = text
 
-OLLAMA_URL   = os.getenv("OLLAMA_URL",   "http://127.0.0.1:11434")
-OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "minimax-m2.5:cloud")
-
-# ── FIX #4: Share a single session across all instances for HTTP keep-alive ──
-# This reuses TCP connections to Ollama, eliminating handshake overhead per call.
-_ollama_session = requests.Session()
-_ollama_session.headers.update({"Content-Type": "application/json"})
-
-import time as _time
+# ── NVIDIA AI ENDPOINTS CONFIGURATION ──
+NVIDIA_MODEL = os.getenv("NVIDIA_MODEL", "deepseek-ai/deepseek-v4-pro")
 
 class OllamaWrapper:
-    def __init__(self, model_name=OLLAMA_MODEL):
+    """
+    Wrapper for NVIDIA AI Endpoints, maintaining the 'OllamaWrapper' name 
+    to avoid breaking existing imports across the codebase.
+    
+    Includes a built-in rate limiter to stay under 40 requests per minute.
+    """
+    _lock = threading.Lock()
+    _last_request_time = 0
+    _min_interval = 60.0 / 40.0  # 1.5 seconds for 40 RPM
+
+    def __init__(self, model_name=NVIDIA_MODEL):
+        api_key = os.getenv("NVIDIA_API_KEY")
+        if not api_key:
+            print("WARNING: NVIDIA_API_KEY not found in environment.")
+            
         self.model_name = model_name
+        self.client = ChatNVIDIA(
+            model=self.model_name,
+            api_key=api_key,
+            temperature=1,
+            top_p=0.95,
+            max_tokens=16384,
+            extra_body={"chat_template_kwargs": {"thinking": False}},
+        )
+
+    def _apply_rate_limit(self):
+        """Ensures at least 1.5 seconds between requests globally across all instances."""
+        with OllamaWrapper._lock:
+            now = time.time()
+            wait_time = OllamaWrapper._last_request_time + OllamaWrapper._min_interval - now
+            if wait_time > 0:
+                # Use a small sleep to avoid tight loop, though lock handles it
+                time.sleep(wait_time)
+            OllamaWrapper._last_request_time = time.time()
 
     def generate_content(self, prompt):
-        url = f"{OLLAMA_URL}/api/generate"
-        payload = {
-            "model": self.model_name,
-            "prompt": prompt,
-            "stream": False
-        }
+        self._apply_rate_limit()
+        try:
+            # LangChain ChatNVIDIA uses invoke for non-streaming calls
+            response = self.client.invoke(prompt)
+            return OllamaResponse(response.content)
+        except Exception as e:
+            print(f"NVIDIA API Error ({self.model_name}): {str(e)}")
+            # Return empty JSON string if it fails, to avoid crashing downstream parsers
+            return OllamaResponse("{}")
 
-        
-        max_retries = 3
-        retry_delay = 2  # seconds
-        
-        for attempt in range(max_retries):
-            res = None
-            try:
-                res = _ollama_session.post(url, json=payload, timeout=180) # Increased timeout to 180s
-                res.raise_for_status()
-                data = res.json()
-                return OllamaResponse(data.get("response", ""))
-            except (requests.exceptions.RequestException, requests.exceptions.HTTPError) as e:
-                error_msg = str(e)
-                if res is not None and hasattr(res, 'text'):
-                    error_msg += f" Response: {res.text}"
-                
-                print(f"Ollama attempt {attempt + 1} failed: {error_msg}")
-                
-                if attempt < max_retries - 1:
-                    print(f"Retrying in {retry_delay}s...")
-                    _time.sleep(retry_delay)
-                    retry_delay *= 2 # Exponential backoff
-                else:
-                    print(f"Ollama generation failed after {max_retries} attempts.")
-                    return OllamaResponse("{}")
-        
-        return OllamaResponse("{}")
+    def stream_content(self, prompt):
+        """Streaming support as requested in the snippet."""
+        self._apply_rate_limit()
+        return self.client.stream(prompt)
+
+
 
 
 
@@ -246,7 +257,7 @@ async def analyze_lead(lead_id: str):
     """Trigger the LangGraph workflow to compute real insights for a specific lead."""
     # Configure the Ollama LLM
     try:
-        llm = OllamaWrapper('minimax-m2.5:cloud')
+        llm = OllamaWrapper()
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to initialize Ollama LLM: {str(e)}")
         
@@ -347,7 +358,7 @@ async def analyze_dataset_bulk():
     print("Starting global background dataset analysis...")
     # Configure the Ollama LLM
     try:
-        llm = OllamaWrapper('minimax-m2.5:cloud')
+        llm = OllamaWrapper()
     except Exception as e:
         print(f"Error initializing Ollama LLM: {str(e)}")
         return
@@ -456,7 +467,7 @@ async def regenerate_node(lead_id: str, node: str, user=Depends(get_current_user
         
     try:
         # Load LLM
-        llm = OllamaWrapper('minimax-m2.5:cloud')
+        llm = OllamaWrapper()
         
         # Build State
         # Prioritize the full raw dataset if available (added recently for universal ingestion context),
