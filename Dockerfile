@@ -29,6 +29,9 @@ RUN npm run build
 FROM python:3.11-slim
 WORKDIR /app
 
+# Ensure Python logs are sent straight to terminal without buffering
+ENV PYTHONUNBUFFERED=1
+
 # Install Node.js 20, nginx, supervisor, gettext (envsubst), and Playwright deps
 RUN apt-get update && apt-get install -y curl gnupg ca-certificates && \
     curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \

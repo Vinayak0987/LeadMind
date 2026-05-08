@@ -8,7 +8,7 @@ load_dotenv()
 MONGO_URL = os.getenv("mongodb", "mongodb://localhost:27017")
 DB_NAME = os.getenv("DB_NAME", "SalesAgent")
 
-client = AsyncIOMotorClient(MONGO_URL)
+client = AsyncIOMotorClient(MONGO_URL, serverSelectionTimeoutMS=5000)
 database = client.get_database(DB_NAME)
 
 companies_collection = database.get_collection("companies")

@@ -31,8 +31,11 @@ from fastapi.staticfiles import StaticFiles
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    print("BACKEND: Starting up...")
     # Initialize MongoDB Indexes on startup
+    print("BACKEND: Creating MongoDB indexes...")
     await create_indexes()
+    print("BACKEND: Startup complete. Listening...")
 
     # Start background scheduler poll (follow-ups)
     scheduler_task = asyncio.create_task(scheduler_loop())
