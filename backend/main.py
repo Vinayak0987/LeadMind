@@ -99,6 +99,10 @@ async def global_exception_handler(request: Request, exc: Exception):
         headers=headers,
     )
 
+@app.get("/health")
+async def health_check():
+    return {"status": "healthy"}
+
 @app.middleware("http")
 async def log_requests(request: Request, call_next):
     print(f"DEBUG: Request {request.method} {request.url}")

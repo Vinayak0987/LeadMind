@@ -8,8 +8,12 @@ load_dotenv()
 MONGO_URL = os.getenv("mongodb", "mongodb://localhost:27017")
 DB_NAME = os.getenv("DB_NAME", "SalesAgent")
 
-client = AsyncIOMotorClient(MONGO_URL, serverSelectionTimeoutMS=5000)
-database = client.get_database(DB_NAME)
+try:
+    client = AsyncIOMotorClient(MONGO_URL, serverSelectionTimeoutMS=5000)
+    database = client.get_database(DB_NAME)
+except Exception as e:
+    print(f"CRITICAL ERROR: Failed to initialize MongoDB client: {e}")
+    raise e
 
 companies_collection = database.get_collection("companies")
 batches_collection = database.get_collection("batches")
