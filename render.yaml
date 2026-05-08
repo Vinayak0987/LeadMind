@@ -1,0 +1,38 @@
+# render.yaml — Render Blueprint
+# Deploys both backend (FastAPI) and frontend (Next.js) as Docker services.
+# Connect your GitHub repo on Render and it will pick this file up automatically.
+
+services:
+
+  # ── Backend: FastAPI ────────────────────────────────────────────────────────
+  - type: web
+    name: leadmind-backend
+    runtime: docker
+    dockerfilePath: docker/backend/Dockerfile
+    dockerContext: .          # MUST be repo root to access shared modules
+    plan: starter             # change to 'standard' for production workloads
+    envVars:
+      - key: mongodb
+        sync: false           # set manually in Render dashboard (Atlas URI)
+      - key: NVIDIA_API_KEY
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: BACKEND_BASE_URL
+        sync: false           # set to https://leadmind-backend.onrender.com
+      - key: FRONTEND_URL
+        sync: false           # set to https://leadmind-frontend.onrender.com
+
+  # ── Frontend: Next.js ───────────────────────────────────────────────────────
+  - type: web
+    name: leadmind-frontend
+    runtime: docker
+    dockerfilePath: docker/frontend/Dockerfile
+    dockerContext: .          # repo root
+    plan: starter
+    buildArgs:
+      - key: NEXT_PUBLIC_API_URL
+        value: https://leadmind-backend.onrender.com   # update after first backend deploy
+    envVars:
+      - key: NODE_ENV
+        value: production
