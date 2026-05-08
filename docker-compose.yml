@@ -11,7 +11,7 @@ services:
       - mongodb=${mongodb}
       - NVIDIA_API_KEY=${NVIDIA_API_KEY}
       - JWT_SECRET=${JWT_SECRET}
-      - BACKEND_BASE_URL=http://backend:8000
+      - BACKEND_BASE_URL=${BACKEND_BASE_URL}
     volumes:
       - ./backend/public:/app/backend/public
 
