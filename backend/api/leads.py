@@ -733,7 +733,8 @@ async def bulk_approve_leads(payload: dict = Body(...), user=Depends(get_current
                         final_html_content = render_template(tpl_html, lead_with_ai, company_doc)
                     elif not raw_content.strip().startswith("<"):
                         paragraphs = raw_content.split("\n\n")
-                        html_parts = [f"<p style='margin:0 0 16px 0;'>{p.replace('\\n', '<br/>')}</p>" for p in paragraphs if p.strip()]
+                        paragraphs = [p.replace('\n', '<br/>') for p in paragraphs if p.strip()]
+                        html_parts = [f"<p style='margin:0 0 16px 0;'>{p}</p>" for p in paragraphs]
                         final_html_content = f"<div style='font-family:Arial,sans-serif;font-size:15px;color:#1a1a1a;max-width:600px'>{''.join(html_parts)}</div>"
 
                     tracking_token = str(uuid.uuid4())
