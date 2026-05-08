@@ -3,8 +3,8 @@ server {
     server_name _;
     client_max_body_size 50M;
 
-    # Backend API routes
-    location /api/ {
+    # Backend API routes (includes /api and /api/*)
+    location /api {
         proxy_pass http://127.0.0.1:8000;
         proxy_http_version 1.1;
         proxy_set_header Host $host;
