@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export async function fetchLeads(page = 1, pageSize = 25, params = {}) {
     const query = new URLSearchParams({

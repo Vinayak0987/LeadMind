@@ -19,8 +19,8 @@ RUN npm install
 COPY frontend/ ./
 
 # Since nginx handles routing on the same domain, API calls are relative (/api/...)
-# Set NEXT_PUBLIC_API_URL to empty so Next.js uses relative paths
-ARG NEXT_PUBLIC_API_URL=""
+# Set NEXT_PUBLIC_API_URL to /api by default for production builds
+ARG NEXT_PUBLIC_API_URL="/api"
 ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
 
 RUN npm run build

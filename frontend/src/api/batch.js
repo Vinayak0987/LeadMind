@@ -1,4 +1,4 @@
-const API = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export async function uploadBatch(filesArray, startIndex = null, endIndex = null) {
     const formData = new FormData();
