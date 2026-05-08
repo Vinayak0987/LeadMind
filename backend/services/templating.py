@@ -144,10 +144,11 @@ def render_block_html(block: dict, gs: dict) -> str:
         
         bottom_links = f'<div style="margin-top:16px;opacity:0.8;">{" &nbsp;|&nbsp; ".join(links_html)}</div>' if links_html else ""
         
+        company_html = company.replace("\\n", "<br/>")
         inner = (
             f'<div style="padding:24px 0;text-align:{align};font-size:{fs}px;color:{col};font-family:{ff};line-height:1.6;">'
             f'{icons_html}'
-            f'<div>{company.replace("\\n", "<br/>")}</div>'
+            f'<div>{company_html}</div>'
             f'{bottom_links}'
             f'</div>'
         )
