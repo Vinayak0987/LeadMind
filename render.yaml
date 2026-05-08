@@ -1,38 +1,22 @@
-# render.yaml — Render Blueprint
-# Deploys both backend (FastAPI) and frontend (Next.js) as Docker services.
-# Connect your GitHub repo on Render and it will pick this file up automatically.
+# render.yaml — Render Blueprint (single service deployment)
+# Deploys the entire LeadMind stack (FastAPI + Next.js + nginx) as ONE Docker container.
+# Go to render.com → New → Blueprint → connect your GitHub repo.
 
 services:
-
-  # ── Backend: FastAPI ────────────────────────────────────────────────────────
   - type: web
-    name: leadmind-backend
+    name: leadmind
     runtime: docker
-    dockerfilePath: docker/backend/Dockerfile
-    dockerContext: .          # MUST be repo root to access shared modules
-    plan: starter             # change to 'standard' for production workloads
+    dockerfilePath: Dockerfile        # root monolithic Dockerfile
+    dockerContext: .                  # repo root (required for shared modules)
+    plan: starter
     envVars:
       - key: mongodb
-        sync: false           # set manually in Render dashboard (Atlas URI)
+        sync: false                   # paste Atlas URI in Render dashboard
       - key: NVIDIA_API_KEY
         sync: false
       - key: JWT_SECRET
         sync: false
       - key: BACKEND_BASE_URL
-        sync: false           # set to https://leadmind-backend.onrender.com
+        sync: false                   # set to https://leadmind.onrender.com
       - key: FRONTEND_URL
-        sync: false           # set to https://leadmind-frontend.onrender.com
-
-  # ── Frontend: Next.js ───────────────────────────────────────────────────────
-  - type: web
-    name: leadmind-frontend
-    runtime: docker
-    dockerfilePath: docker/frontend/Dockerfile
-    dockerContext: .          # repo root
-    plan: starter
-    buildArgs:
-      - key: NEXT_PUBLIC_API_URL
-        value: https://leadmind-backend.onrender.com   # update after first backend deploy
-    envVars:
-      - key: NODE_ENV
-        value: production
+        sync: false                   # set to https://leadmind.onrender.com (same URL!)
