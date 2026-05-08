@@ -3,8 +3,8 @@ version: '3.8'
 services:
   backend:
     build:
-      context: .
-      dockerfile: Dockerfile.backend
+      context: .                          # build context is repo root (to access shared folders)
+      dockerfile: docker/backend/Dockerfile
     ports:
       - "8000:8000"
     environment:
@@ -13,18 +13,17 @@ services:
       - JWT_SECRET=${JWT_SECRET}
       - BACKEND_BASE_URL=${BACKEND_BASE_URL}
     volumes:
-      - ./backend/public:/app/backend/public
+      - ./backend/public:/app/backend/public  # persist uploaded logos/sdk files
 
   frontend:
     build:
-      context: .
-      dockerfile: Dockerfile.frontend
+      context: .                          # build context is repo root
+      dockerfile: docker/frontend/Dockerfile
       args:
-        - NEXT_PUBLIC_API_URL=http://localhost:8000
+        - NEXT_PUBLIC_API_URL=${BACKEND_BASE_URL}
     ports:
       - "3000:3000"
     environment:
       - NODE_ENV=production
     depends_on:
       - backend
-

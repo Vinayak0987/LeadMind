@@ -1,4 +1,3 @@
-# Dockerfile.backend
 FROM python:3.11-slim
 
 WORKDIR /app
@@ -29,26 +28,26 @@ RUN apt-get update && apt-get install -y \
     libasound2 \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy requirements and install Python dependencies
+# Copy and install Python dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Playwright browser binaries
+# Install Playwright browser binaries (for SDK web scraping)
 RUN playwright install chromium
 
-# Copy shared root-level modules
+# Copy shared root-level modules (used by backend agents)
 COPY langgraph_nodes ./langgraph_nodes
 COPY prompts ./prompts
 COPY agents ./agents
 COPY utils ./utils
 
-# Copy the backend code
+# Copy the backend application code
 COPY backend ./backend
 
-# Create directories for static files (logos, SDK assets)
+# Create directories for runtime-generated static files
 RUN mkdir -p backend/public/logos backend/public/sdk
 
-# Set working directory to backend
+# Set working directory to backend where main.py lives
 WORKDIR /app/backend
 
 EXPOSE 8000
