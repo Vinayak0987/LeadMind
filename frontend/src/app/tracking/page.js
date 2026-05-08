@@ -9,7 +9,7 @@ import {
   Target, Zap, Copy, Check, Globe, ChevronDown, ChevronUp
 } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 // ── Stat Card ──────────────────────────────────────────────────────────────
 function StatCard({ icon: Icon, label, value, sub, accent = "bg-ink" }) {
@@ -71,7 +71,7 @@ export default function TrackingPage() {
   const fetchKeys = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API}/api/api-keys/list`, {
+      const res = await fetch(`${API}/api-keys/list`, {
         headers: { Authorization: `Bearer ${getToken()}` }
       });
       if (!res.ok) throw new Error("Failed to load API keys.");

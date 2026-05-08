@@ -3,7 +3,7 @@ import DashboardLayout from "../components/DashboardLayout";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-const API = "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function MissionControl() {
     const router = useRouter();

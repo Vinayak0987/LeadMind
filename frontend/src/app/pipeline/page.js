@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 import { useRouter } from "next/navigation";
 
-const API = "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 function getAuthHeaders() {
   const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;

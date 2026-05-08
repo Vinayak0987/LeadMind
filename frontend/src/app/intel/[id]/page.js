@@ -5,7 +5,7 @@ import { useState, useEffect, use } from "react";
 
 import { useSearchParams } from "next/navigation";
 
-const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api';
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 const DEFAULT_FALLBACK_PHONE = "+917777039470";
 
 export default function IntelPage({ params }) {

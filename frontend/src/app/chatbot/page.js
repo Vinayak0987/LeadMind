@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 const token = () => (typeof window !== "undefined" ? localStorage.getItem("access_token") : "");
 const hdrs = () => ({ "Content-Type": "application/json", Authorization: "Bearer " + token() });
 
@@ -46,7 +46,7 @@ export default function ChatbotPage() {
     };
 
     const firstKey = apiKeys[0];
-    const apiHost  = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace("/api", "");
+    const apiHost  = (process.env.NEXT_PUBLIC_API_URL || "/api").replace("/api", "");
 
     const embedSnippet = firstKey
         ? `<script\n  src="${apiHost}/public/sdk/chatbot-widget.js"\n  data-api-key="${firstKey.key}"\n  data-api-host="${apiHost}"\n  data-title="Chat with us"\n  data-color="#7C3AED"\n  async>\n</script>`

@@ -7,9 +7,9 @@ export default function EmbedSnippet({ apiKey }) {
   const [activeTab, setActiveTab] = useState("html");
 
   const apiHostUrl =
-    typeof window !== "undefined" && window.location.hostname !== "localhost"
-      ? process.env.NEXT_PUBLIC_API_URL || window.location.origin
-      : "http://localhost:8000";
+    typeof window !== "undefined"
+      ? process.env.NEXT_PUBLIC_API_URL || (window.location.hostname === "localhost" ? "http://localhost:8000/api" : window.location.origin + "/api")
+      : "http://localhost:8000/api";
 
   const scriptTag = `src="${apiHostUrl}/public/sdk/leadmind-tracker.js"\n    data-api-key="${apiKey}"\n    data-api-host="${apiHostUrl}"`;
 

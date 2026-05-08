@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 
-const API = "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 const FALLBACK_PHONE = "+917777039470";
 const token = () => (typeof window !== "undefined" ? localStorage.getItem("access_token") : "");
 const hdrs = () => ({ "Content-Type": "application/json", Authorization: "Bearer " + token() });

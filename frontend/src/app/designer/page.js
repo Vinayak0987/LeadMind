@@ -2,7 +2,7 @@
 import DashboardLayout from "../../components/DashboardLayout";
 import { useState, useRef, useCallback, useEffect } from "react";
 
-const API = "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers

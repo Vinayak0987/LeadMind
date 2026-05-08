@@ -11,12 +11,13 @@ export default function DashboardLayout({ children }) {
   useEffect(() => {
     const token = localStorage.getItem("access_token");
     if (!token) {
-      router.replace("/login");
+      router.push("/login");
       return;
     }
 
+    const API = process.env.NEXT_PUBLIC_API_URL || "/api";
     // Verify token with backend
-    fetch("http://localhost:8000/api/auth/me", {
+    fetch(`${API}/auth/me`, {
       headers: { "Authorization": `Bearer ${token}` }
     })
     .then(res => {

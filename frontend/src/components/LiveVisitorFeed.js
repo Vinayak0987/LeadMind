@@ -8,7 +8,7 @@ import {
   Search, ChevronDown, ChevronUp, Globe, X, ExternalLink, Mail, Phone, Trash2
 } from "lucide-react";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
 function formatDuration(sec) {
@@ -666,6 +666,8 @@ function VisitorCard({ v, events, onPromote, onDelete, promoting, onClick }) {
 }
 
 // ── Main Component ────────────────────────────────────────────────────────────
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
+
 export default function LiveVisitorFeed() {
   const [events, setEvents] = useState([]);
   const [visitors, setVisitors] = useState([]);
@@ -683,8 +685,8 @@ export default function LiveVisitorFeed() {
       if (!token) return;
       // Use 720h (30 days) so older visitors aren't missed by the time filter
       const [visRes, evtRes] = await Promise.all([
-        fetch(`${API}/api/api-keys/visitors?hours=720&limit=100`, { headers: { Authorization: `Bearer ${token}` } }),
-        fetch(`${API}/api/api-keys/events?limit=100`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API}/api-keys/visitors?hours=720&limit=100`, { headers: { Authorization: `Bearer ${token}` } }),
+        fetch(`${API}/api-keys/events?limit=100`, { headers: { Authorization: `Bearer ${token}` } }),
       ]);
       if (visRes.ok) setVisitors((await visRes.json()).visitors || []);
       if (evtRes.ok) setEvents((await evtRes.json()).events || []);
@@ -706,7 +708,7 @@ export default function LiveVisitorFeed() {
       setVisitors(prev => prev.map(v => v.visitor_id === vid ? { ...v, is_lead: true } : v));
 
       const token = localStorage.getItem("access_token");
-      const res = await fetch(`${API}/api/api-keys/visitors/promote`, {
+      const res = await fetch(`${API}/api-keys/visitors/promote`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ visitor_ids: [vid] }),
@@ -731,7 +733,7 @@ export default function LiveVisitorFeed() {
       setVisitors(prev => prev.map(v => vids.includes(v.visitor_id) ? { ...v, is_lead: true } : v));
 
       const token = localStorage.getItem("access_token");
-      const res = await fetch(`${API}/api/api-keys/visitors/promote`, {
+      const res = await fetch(`${API}/api-keys/visitors/promote`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ visitor_ids: vids }),
@@ -752,7 +754,7 @@ export default function LiveVisitorFeed() {
     try {
       setVisitors(prev => prev.filter(v => v.visitor_id !== vid));
       const token = localStorage.getItem("access_token");
-      await fetch(`${API}/api/api-keys/visitors/${vid}`, {
+      await fetch(`${API}/api-keys/visitors/${vid}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });

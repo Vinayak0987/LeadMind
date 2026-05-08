@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 function getAuth() {
   const token = typeof window !== "undefined" ? localStorage.getItem("access_token") : null;

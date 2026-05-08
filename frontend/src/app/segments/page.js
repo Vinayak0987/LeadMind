@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import DashboardLayout from "../../components/DashboardLayout";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 const FIELD_OPTIONS = [
     { value: "intel.intent_score", label: "Intent Score" },

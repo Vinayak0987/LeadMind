@@ -7,7 +7,8 @@ export default function Header() {
     useEffect(() => {
         const token = localStorage.getItem("access_token");
         if (token) {
-            fetch("http://localhost:8000/api/auth/me", {
+            const API = process.env.NEXT_PUBLIC_API_URL || "/api";
+            fetch(`${API}/auth/me`, {
                 headers: {
                     "Authorization": `Bearer ${token}`
                 }

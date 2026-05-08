@@ -6,7 +6,7 @@ import { LedgerTable } from "../../components/LedgerTable";
 import { useBatchProgress } from "../../hooks/useBatchProgress";
 import { useSearchParams } from "next/navigation";
 
-const API = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api";
+const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 // ── Live Bulk Progress Modal ───────────────────────────────────────────────────
 // All state lives in the PARENT (LedgerView) to avoid React 18 Strict Mode
