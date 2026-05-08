@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-MONGO_URL = os.getenv("mongodb", "mongodb://localhost:27017")
+MONGO_URL = os.getenv("MONGODB_URI") or os.getenv("mongodb") or "mongodb://localhost:27017"
 DB_NAME = os.getenv("DB_NAME", "SalesAgent")
 
 try:
