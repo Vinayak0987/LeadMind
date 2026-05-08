@@ -115,7 +115,7 @@ function CreateCampaignModal({ onClose, onCreated }) {
     if (steps.some(s => !s.step_id || !s.subject)) return setError("All steps need a Step ID and Subject");
     setLoading(true); setError("");
     try {
-      const res = await fetch(`${API}/api/campaigns/create`, {
+      const res = await fetch(`${API}/campaigns/create`, {
         method: "POST", headers: getAuth(), body: JSON.stringify({ name, steps }),
       });
       const data = await res.json();
@@ -175,7 +175,7 @@ function EnrollModal({ campaign, onClose, onEnrolled }) {
     if (!ids.length) return setError("Enter at least one Lead ID");
     setLoading(true); setError("");
     try {
-      const res = await fetch(`${API}/api/campaigns/${campaign.campaign_id}/enroll`, {
+      const res = await fetch(`${API}/campaigns/${campaign.campaign_id}/enroll`, {
         method: "POST", headers: getAuth(), body: JSON.stringify({ lead_ids: ids }),
       });
       const data = await res.json();
@@ -219,7 +219,7 @@ function CampaignDetail({ campaign, onClose }) {
   const [detail, setDetail] = useState(null);
 
   useEffect(() => {
-    fetch(`${API}/api/campaigns/${campaign.campaign_id}`, { headers: getAuth() })
+    fetch(`${API}/campaigns/${campaign.campaign_id}`, { headers: getAuth() })
       .then(r => r.json()).then(setDetail);
   }, [campaign.campaign_id]);
 
@@ -287,7 +287,7 @@ export default function CampaignsPage() {
 
   const fetchCampaigns = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/campaigns/list`, { headers: getAuth() });
+      const res = await fetch(`${API}/campaigns/list`, { headers: getAuth() });
       const data = await res.json();
       setCampaigns(data.campaigns || []);
     } catch (e) { console.error(e); }
@@ -299,14 +299,14 @@ export default function CampaignsPage() {
   const showToast = (msg) => { setToast(msg); setTimeout(() => setToast(""), 3000); };
 
   const togglePause = async (c) => {
-    await fetch(`${API}/api/campaigns/${c.campaign_id}/pause`, { method: "PATCH", headers: getAuth() });
+    await fetch(`${API}/campaigns/${c.campaign_id}/pause`, { method: "PATCH", headers: getAuth() });
     showToast(`Campaign ${c.status === "active" ? "paused" : "resumed"}`);
     fetchCampaigns();
   };
 
   const deleteCampaign = async (c) => {
     if (!confirm(`Delete "${c.name}" and all enrollments?`)) return;
-    await fetch(`${API}/api/campaigns/${c.campaign_id}`, { method: "DELETE", headers: getAuth() });
+    await fetch(`${API}/campaigns/${c.campaign_id}`, { method: "DELETE", headers: getAuth() });
     showToast("Campaign deleted");
     fetchCampaigns();
   };

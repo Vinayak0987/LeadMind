@@ -121,14 +121,14 @@ function TestDetailModal({ test, onClose, onRefresh }) {
   const [declaring, setDeclaring] = useState(false);
 
   useEffect(() => {
-    fetch(`${API}/api/ab/${test.test_id}`, { headers: getAuth() })
+    fetch(`${API}/ab/${test.test_id}`, { headers: getAuth() })
       .then(r => r.json()).then(setDetail);
   }, [test.test_id]);
 
   const declareWinner = async () => {
     if (!declareId) return;
     setDeclaring(true);
-    await fetch(`${API}/api/ab/${test.test_id}/declare-winner`, {
+    await fetch(`${API}/ab/${test.test_id}/declare-winner`, {
       method: "POST", headers: getAuth(),
       body: JSON.stringify({ winner_variant_id: declareId }),
     });
@@ -219,7 +219,7 @@ function CreateTestModal({ onClose, onCreated }) {
       return setError("Name, lead IDs, and both variant subjects are required");
     setLoading(true); setError("");
     try {
-      const res = await fetch(`${API}/api/ab/create`, {
+      const res = await fetch(`${API}/ab/create`, {
         method: "POST", headers: getAuth(),
         body: JSON.stringify({ name, lead_ids: ids, variants: [varA, varB] }),
       });
@@ -307,7 +307,7 @@ export default function ABTestingPage() {
 
   const fetchTests = useCallback(async () => {
     try {
-      const res = await fetch(`${API}/api/ab/list`, { headers: getAuth() });
+      const res = await fetch(`${API}/ab/list`, { headers: getAuth() });
       const data = await res.json();
       setTests(data.tests || []);
     } catch (e) { console.error(e); }

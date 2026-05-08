@@ -84,7 +84,7 @@ export default function TrackingPage() {
   const fetchStats = async () => {
     try {
       setStatsLoading(true);
-      const res = await fetch(`${API}/api/api-keys/stats`, {
+      const res = await fetch(`${API}/api-keys/stats`, {
         headers: { Authorization: `Bearer ${getToken()}` }
       });
       if (res.ok) setStats(await res.json());
@@ -97,7 +97,7 @@ export default function TrackingPage() {
     if (!newKeyName.trim()) return;
     setCreating(true);
     try {
-      const res = await fetch(`${API}/api/api-keys/generate`, {
+      const res = await fetch(`${API}/api-keys/generate`, {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${getToken()}` },
         body: JSON.stringify({ name: newKeyName })
@@ -114,7 +114,7 @@ export default function TrackingPage() {
   const handleRevoke = async (keyId) => {
     if (!confirm("Revoke this key? All sites using it will stop tracking immediately.")) return;
     try {
-      await fetch(`${API}/api/api-keys/${keyId}`, {
+      await fetch(`${API}/api-keys/${keyId}`, {
         method: "DELETE", headers: { Authorization: `Bearer ${getToken()}` }
       });
       await fetchKeys();
