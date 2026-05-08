@@ -21,6 +21,7 @@ from api.ingest import router as ingest_router
 from api.tasks import router as tasks_router         # Phase 6 — Task Management
 from api.chat import router as chat_router            # Phase 6 — AI Chatbot
 from api.channels import router as channels_router    # Phase 6 — Multi-Channel (Twilio)
+from api.smart_upload import router as smart_upload_router
 from db import create_indexes
 from services.scheduler import scheduler_loop
 from services.campaign_engine import campaign_engine_loop
@@ -122,5 +123,4 @@ app.include_router(reports_router,   prefix="/api/reports")   # authenticated �
 app.include_router(tasks_router,     prefix="/api/tasks")     # authenticated — Phase 6
 app.include_router(chat_router,      prefix="/api/chat")      # API-key + authenticated — Phase 6
 app.include_router(channels_router,  prefix="/api/channels")  # authenticated — Phase 6 (Twilio)
-
-
+app.include_router(smart_upload_router, prefix="/api/smart-upload")

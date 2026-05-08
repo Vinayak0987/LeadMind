@@ -92,8 +92,9 @@ COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 COPY docker/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Remove default nginx site
+# Remove default nginx sites and configs
 RUN rm -f /etc/nginx/sites-enabled/default
+RUN rm -f /etc/nginx/conf.d/default.conf
 
 # Render uses $PORT (default 10000); expose it
 EXPOSE 10000
