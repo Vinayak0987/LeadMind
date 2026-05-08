@@ -666,7 +666,6 @@ function VisitorCard({ v, events, onPromote, onDelete, promoting, onClick }) {
 }
 
 // ── Main Component ────────────────────────────────────────────────────────────
-const API = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 export default function LiveVisitorFeed() {
   const [events, setEvents] = useState([]);
