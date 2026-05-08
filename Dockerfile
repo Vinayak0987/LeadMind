@@ -10,7 +10,7 @@
 # ══════════════════════════════════════════════════════════════════════════════
 
 # ── Stage 1: Build Next.js ────────────────────────────────────────────────────
-FROM node:18-alpine AS frontend-builder
+FROM node:20-alpine AS frontend-builder
 WORKDIR /build
 
 COPY frontend/package*.json ./
@@ -29,9 +29,9 @@ RUN npm run build
 FROM python:3.11-slim
 WORKDIR /app
 
-# Install Node.js 18, nginx, supervisor, gettext (envsubst), and Playwright deps
+# Install Node.js 20, nginx, supervisor, gettext (envsubst), and Playwright deps
 RUN apt-get update && apt-get install -y curl gnupg ca-certificates && \
-    curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    curl -fsSL https://deb.nodesource.com/setup_20.x | bash - && \
     apt-get install -y \
     nodejs \
     nginx \
