@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    ports:
+      - "8000:8000"
+    environment:
+      - mongodb=${mongodb}
+      - NVIDIA_API_KEY=${NVIDIA_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+      - BACKEND_BASE_URL=http://backend:8000
+    volumes:
+      - ./backend/public:/app/backend/public
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+      args:
+        - NEXT_PUBLIC_API_URL=http://localhost:8000
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+

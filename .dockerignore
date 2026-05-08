@@ -1,0 +1,15 @@
+# .dockerignore
+**/node_modules
+**/.next
+**/__pycache__
+**/.env
+**/venv
+.git
+*.pyc
+*.pyo
+*.pyd
+.db
+data/batches/*
+public/logos/*
+cloudflared.exe
+ngrok_bin
