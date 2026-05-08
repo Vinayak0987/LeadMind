@@ -1,6 +1,5 @@
 # render.yaml — Render Blueprint (single service deployment)
 # Deploys the entire LeadMind stack (FastAPI + Next.js + nginx) as ONE Docker container.
-# Go to render.com → New → Blueprint → connect your GitHub repo.
 
 services:
   - type: web
@@ -17,6 +16,6 @@ services:
       - key: JWT_SECRET
         sync: false
       - key: BACKEND_BASE_URL
-        sync: false                   # set to https://leadmind.onrender.com
+        value: https://leadmind-79rf.onrender.com
       - key: FRONTEND_URL
-        sync: false                   # set to https://leadmind.onrender.com (same URL!)
+        value: https://leadmind-79rf.onrender.com
