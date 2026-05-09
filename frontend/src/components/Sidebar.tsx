@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-export default function Sidebar() {
+export default function Sidebar({ isOpen = true }: { isOpen?: boolean }) {
     const pathname = usePathname();
 
     const navItems = [
@@ -17,7 +17,7 @@ export default function Sidebar() {
     ];
 
     return (
-        <aside className="w-[250px] bg-paper border-r border-ink flex flex-col shrink-0 overflow-y-auto hidden md:flex">
+        <aside className={`w-[250px] bg-paper border-r border-ink flex flex-col shrink-0 overflow-y-auto hidden md:flex ${!isOpen && '!hidden'}`}>
             <nav className="flex flex-col w-full">
                 {navItems.map((item) => {
                     const isActive = pathname === item.path;

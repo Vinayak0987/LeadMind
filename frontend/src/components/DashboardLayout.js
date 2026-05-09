@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 export default function DashboardLayout({ children }) {
   const router = useRouter();
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   useEffect(() => {
     const token = localStorage.getItem("access_token");
@@ -46,9 +47,9 @@ export default function DashboardLayout({ children }) {
 
   return (
     <div className="flex flex-col h-screen overflow-hidden text-ink bg-mute">
-      <Header />
+      <Header toggleSidebar={() => setIsSidebarOpen(!isSidebarOpen)} isSidebarOpen={isSidebarOpen} />
       <div className="flex flex-1 overflow-hidden">
-        <Sidebar />
+        <Sidebar isOpen={isSidebarOpen} />
         <main className="flex-1 flex flex-col overflow-y-auto bg-grid-pattern relative">
           {children}
         </main>
